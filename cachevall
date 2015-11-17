@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ $# -lt 2 ]; then
+  echo "usage: cachevall [options] <house_name> <dirname>" 1>&2
+  echo "   runs <house_name> against everything else in the <dirname> directory" 1>&2
+  exit 1
+fi
+
+dir=${@:$#:1}
+house=${@:$(($#-1)):1}
+options=${@:1:$(($#-2))}
+
+echo "Playing ${house} against everything else in ${dir} ..."
+
+# path to sim is same as to this script, with cachevall replaced by cacheofkings
+simulator=${0%cachevall}cacheofkings
+
+for otherhouse in ${dir}/*; do
+  if [ ! -x $otherhouse ]; then
+    # skip non-executable files
+    continue
+  fi
+  if [ "$otherhouse" = "$house" ]; then
+    # skip the house itself
+    continue
+  fi
+  echo "Playing $house vs. $otherhouse:"
+  $simulator $options $house $otherhouse
+
+  echo
+
+  echo "Playing $otherhouse vs. $house:"
+  $simulator $options $otherhouse $house
+
+  echo
+done
