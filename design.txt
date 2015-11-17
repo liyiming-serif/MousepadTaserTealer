@@ -1,0 +1,2 @@
+<use this as the scratchpad>
+1. win against nop.c: all cores store to our main mem.
