@@ -18,12 +18,12 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   }
 	
   else if (core_id == 2) { //works on cacheline 10 (opponent)
-    ptr += (int*)OPPONENT_DATA_SEGMENT;
+    ptr += (int *)OPPONENT_DATA_SEGMENT;
     Sneak_Attack();
   }
   
   else if(core_id == 3) { //workds on cacheline 11 (opponent)
-    ptr += (int*)OPPONENT_DATA_SEGMENT + CACHE_LINE/4;
+    ptr += (int *)OPPONENT_DATA_SEGMENT + CACHE_LINE/4;
     Sneak_Attack();
   }
 
