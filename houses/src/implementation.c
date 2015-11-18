@@ -37,21 +37,19 @@ void __start(int core_id, int num_crashes, unsigned char payload)
       i = 0; //reset offset when end of block is reached
       ptr += 2*CACHE_LINE/4; //next blocks of mem for an index are 2 cachelines down
     }
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
-    ptr[i++] = payword;
+    ptr[0] = payword;
+    ptr[1] = payword;
+    ptr[2] = payword;
+    ptr[3] = payword;
+    ptr[4] = payword;
+    ptr[5] = payword;
+    ptr[6] = payword;
+    ptr[7] = payword;
+    ptr[8] = payword;
+    ptr[] = payword;
+    ptr[] = payword;
+    ptr[] = payword;
+    ptr[] = payword;
+    ptr[] = payword;
   }
 }
