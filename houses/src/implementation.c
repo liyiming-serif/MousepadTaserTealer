@@ -19,12 +19,12 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   }
 	
   else if (core_id == 2) {
-    ptr += HIMEM;  // move pointer to opponent's half of memory
+    ptr += (int*)HIMEM;  // move pointer to opponent's half of memory
     Sneak_Attack();
   }
   
   else if(core_id == 3) {
-  	ptr += HIMEM + 64;
+  	ptr += (int*)HIMEM + CACHE_LINE/4;
   	Sneak_Attack();
   }
 
