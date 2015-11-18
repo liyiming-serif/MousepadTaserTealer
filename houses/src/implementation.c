@@ -42,5 +42,16 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     ptr[i++] = payword;
     ptr[i++] = payword;
     ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
   }
 }
