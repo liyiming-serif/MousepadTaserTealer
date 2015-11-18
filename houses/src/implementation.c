@@ -1,4 +1,5 @@
 #include "cacheofkings.h"
+#include ""
 
 /*Defeat greedy bot by writing to own mem more efficiently*/
 void __start(int core_id, int num_crashes, unsigned char payload)
@@ -19,7 +20,8 @@ void __start(int core_id, int num_crashes, unsigned char payload)
 	
   else if (core_id == 2) { //works on cacheline 10 (opponent)
     ptr += (int)OPPONENT_DATA_SEGMENT;
-    Sneak_Attack();
+    
+    Alert_Guards();
   }
   
   else if(core_id == 3) { //workds on cacheline 11 (opponent)
@@ -35,6 +37,10 @@ void __start(int core_id, int num_crashes, unsigned char payload)
       i = 0; //reset offset when end of block is reached
       ptr += 2*CACHE_LINE/4; //next blocks of mem for an index are 2 cachelines down
     }
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
+    ptr[i++] = payword;
     ptr[i++] = payword;
   }
 }
