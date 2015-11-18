@@ -23,14 +23,14 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   }
   
   else if(core_id == 3) { //workds on cacheline 11 (opponent)
-  	ptr += (int*)HIMEM + CACHE_LINE/4;
-  	Sneak_Attack();
+    ptr += (int*)HIMEM + CACHE_LINE/4;
+    Sneak_Attack();
   }
 
   int i = 0; //offset
   //main loop
   while (1) { //TODO: detect when to prefetch here
-    if(i > (CACHE_LINE/4))
+    if(i >= (CACHE_LINE/4))
     {
       i = 0; //reset offset when end of block is reached
       ptr += 2*CACHE_LINE/4; //next blocks of mem for an index are 2 cachelines down
