@@ -19,7 +19,8 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   
   else if(core_id == 2) //works on cacheline w. index = 01
   {
-    ptr += CACHE_LINE/4; //advance by 1 cacheline
+    ptr += HOME_DATA_SIZE/4; //start from the end
+    ptr -= CACHE_LINE/4;
   }
 	
   else if (core_id == 1) { //fbi
@@ -29,8 +30,10 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     Alert_Guards(3);
   }
   
-  else if(core_id == 0) { //handles opponent's side of mem
-    ptr += (int)OPPONENT_DATA_SEGMENT + CACHE_LINE/4;
+  else if(core_id == 0) { //handles opponent's side of mem from the end
+    ptr += HIMEM/4;
+    ptr += OPPONENT_DATA_SIZE/4;
+    ptr -= CACHE_LINE/4;
     Sneak_Attack();
   }
   
@@ -112,6 +115,10 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     }
     else
       ptr[63] = payword;
-    ptr += 2*CACHE_LINE/4;
+      
+    if(core_id%2) //even numbered cores write from the end
+      ptr += 2*CACHE_LINE/4;
+    else
+      ptr -= 2*CACHE_LINE/4;
   }
 }
