@@ -23,7 +23,7 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   }
 	
   else if (core_id == 1) { //fbi
-    //ptr += (int)OPPONENT_DATA_SEGMENT; //?
+    ptr += (int)OPPONENT_DATA_SEGMENT; //?
     
     Alert_Guards(2);
     Alert_Guards(3);
