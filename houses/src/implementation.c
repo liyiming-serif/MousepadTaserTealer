@@ -7,7 +7,11 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   int *ptr = (int *)HOME_DATA_SEGMENT;
   //write 4 copies of the payload into four bytes at once.
   unsigned int p = (unsigned int) payload;
+  unsigned int w = (unsigned int) WHITE_WALKER;
+  unsigned int a = (unsigned int) ARROW_BARRAGE;
   unsigned int payword = p | p << 8 | p << 16 | p << 24;
+  unsigned int walker = p | p << 8 | p << 16 | w << 24;
+  unsigned int archer = p | p << 8 | p << 16 | a << 24;
   
   if(core_id == 3) //works on cacheline w. index = 00
   {
@@ -19,21 +23,25 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   }
 	
   else if (core_id == 1) { //fbi
-    ptr += (int)OPPONENT_DATA_SEGMENT;
+    ptr += (int)OPPONENT_DATA_SEGMENT; //?
     
     Alert_Guards(2);
     Alert_Guards(3);
   }
   
-  else if(core_id == 0) { //taunter
+  else if(core_id == 0) { //handles opponent's side of mem
     ptr += (int)OPPONENT_DATA_SEGMENT + CACHE_LINE/4;
     Sneak_Attack();
   }
+  
+  int mana = WHITE_WALKERS_PER_TEAM;
+  int ammo = ARROW_BARRAGES_PER_TEAM;
 
   //main loop
   while (core_id != 1) { //TODO: detect when to prefetch here
     //reset offset when end of block is reached
     //next blocks of mem for an index are 2 cachelines down
+    prefetch(ptr+2*CACHE_LINE/4); //->optimal place to prefetch is here
     ptr[0] = payword; //Unrolling
     ptr[1] = payword;
     ptr[2] = payword;
@@ -97,7 +105,13 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     ptr[60] = payword;
     ptr[61] = payword;
     ptr[62] = payword;
-    ptr[63] = payword;
-    ptr += 64;
+    if(core_id==0 && mana>0)
+    {
+      ptr[63] = walker;
+      mana--;
     }
+    else
+      ptr[63] = payword;
+    ptr += 2*CACHE_LINE/4;
+  }
 }
