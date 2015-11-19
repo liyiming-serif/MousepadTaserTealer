@@ -9,35 +9,31 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   unsigned int p = (unsigned int) payload;
   unsigned int payword = p | p << 8 | p << 16 | p << 24;
   
-  if(core_id == 0) //works on cacheline w. index = 00
+  if(core_id == 3) //works on cacheline w. index = 00
   {
   }
   
-  else if(core_id == 1) //works on cacheline w. index = 01
+  else if(core_id == 2) //works on cacheline w. index = 01
   {
     ptr += CACHE_LINE/4; //advance by 1 cacheline
   }
 	
-  else if (core_id == 2) { //works on cacheline 10 (opponent)
+  else if (core_id == 1) { //fbi
     ptr += (int)OPPONENT_DATA_SEGMENT;
     
     Alert_Guards(2);
     Alert_Guards(3);
   }
   
-  else if(core_id == 3) { //workds on cacheline 11 (opponent)
+  else if(core_id == 0) { //taunter
     ptr += (int)OPPONENT_DATA_SEGMENT + CACHE_LINE/4;
     Sneak_Attack();
   }
 
-  int i = 0; //offset
   //main loop
-  while (1) { //TODO: detect when to prefetch here
-    if(i >= (CACHE_LINE/4))
-    {
-      i = 0; //reset offset when end of block is reached
-      ptr += 2*CACHE_LINE/4; //next blocks of mem for an index are 2 cachelines down
-    }
+  while (core_id != 1) { //TODO: detect when to prefetch here
+    //reset offset when end of block is reached
+    //next blocks of mem for an index are 2 cachelines down
     ptr[0] = payword; //Unrolling
     ptr[1] = payword;
     ptr[2] = payword;
