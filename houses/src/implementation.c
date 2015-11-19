@@ -1,5 +1,5 @@
 #include "cacheofkings.h"
-#include ""
+#include "" //?
 
 /*Defeat greedy bot by writing to own mem more efficiently*/
 void __start(int core_id, int num_crashes, unsigned char payload)
@@ -23,7 +23,7 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   }
 	
   else if (core_id == 1) { //fbi
-    ptr += (int)OPPONENT_DATA_SEGMENT; //?
+    //ptr += (int)OPPONENT_DATA_SEGMENT; //?
     
     Alert_Guards(2);
     Alert_Guards(3);
@@ -38,7 +38,7 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   int ammo = ARROW_BARRAGES_PER_TEAM;
 
   //main loop
-  while (core_id != 1) { //TODO: detect when to prefetch here
+  while (core_id != 1) {
     //reset offset when end of block is reached
     //next blocks of mem for an index are 2 cachelines down
     prefetch(ptr+2*CACHE_LINE/4); //->optimal place to prefetch is here
