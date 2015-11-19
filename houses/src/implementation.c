@@ -1,5 +1,5 @@
 #include "cacheofkings.h"
-#include "" //?
+//#include "" //?
 
 /*Defeat greedy bot by writing to own mem more efficiently*/
 void __start(int core_id, int num_crashes, unsigned char payload)
