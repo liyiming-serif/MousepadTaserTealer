@@ -1,7 +1,7 @@
 #include "cacheofkings.h"
 //#include "" //?
 
-/*Defeat greedy bot by writing to own mem more efficiently*/
+/*Optimize cores 0 and 1. Stretch: win with buffer overflow.*/
 void __start(int core_id, int num_crashes, unsigned char payload)
 {
   int *ptr = (int *)HOME_DATA_SEGMENT;
