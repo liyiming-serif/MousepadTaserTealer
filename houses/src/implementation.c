@@ -28,7 +28,7 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     while (1) {
       for (i = 0; i < TAUNT_SIZE; i++) {
         if (HOME_STATUS->taunt[i] >= 0) {
-	      Alert_Guards(HOME_STATUS->taunt[i]);
+	  Alert_Guards(HOME_STATUS->taunt[i]);
         }
       }
     }
