@@ -24,10 +24,14 @@ void __start(int core_id, int num_crashes, unsigned char payload)
   }
 	
   else if (core_id == 1) { //fbi
-    ptr += (int)OPPONENT_DATA_SEGMENT; //?
-    
-    Alert_Guards(2);
-    Alert_Guards(3);
+    int i;
+    while (1) {
+      for (i = 0; i < TAUNT_SIZE; i++) {
+        if (HOME_STATUS->taunt[i] >= 0) {
+	      Alert_Guards(HOME_STATUS->taunt[i]);
+        }
+      }
+    }
   }
   
   else if(core_id == 0) { //handles opponent's side of mem from the end
