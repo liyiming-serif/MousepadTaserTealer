@@ -1,29 +1,29 @@
 #include "cacheofkings.h"
-//#include "" //?
 
 /*Optimize cores 0 and 1. Stretch: win with buffer overflow.*/
 void __start(int core_id, int num_crashes, unsigned char payload)
 {
+  //init pointer
   int *ptr = (int *)HOME_DATA_SEGMENT;
-  //write 4 copies of the payload into four bytes at once.
-  unsigned int p = (unsigned int) payload;
+  //writes 4 copies of payload into mem in one cycle.
+  unsigned int p = (unsigned int) payload; //byte versions of various payloads cast into ints
   unsigned int w = (unsigned int) WHITE_WALKER;
   unsigned int a = (unsigned int) ARROW_BARRAGE;
-  unsigned int payword = p | p << 8 | p << 16 | p << 24;
-  unsigned int walker = p | p << 8 | p << 16 | w << 24;
-  unsigned int archer = p | p << 8 | p << 16 | a << 24;
+  unsigned int payword = p | p << 8 | p << 16 | p << 24; //regular payload
+  unsigned int walker = p | p << 8 | p << 16 | w << 24; //payload with set trap
+  unsigned int archer = p | p << 8 | p << 16 | a << 24; //payload with arrow barrage
   
   if(core_id == 3) //works on cacheline w. index = 00
   {
   }
   
-  else if(core_id == 2) //works on cacheline w. index = 01
+  else if(core_id == 2) //works backwards on cacheline w. index = 01
   {
-    ptr += HOME_DATA_SIZE/4; //start from the end
+    ptr += HOME_DATA_SIZE/4; //start from the end of mem and write to the start
     ptr -= CACHE_LINE/4;
   }
 	
-  else if (core_id == 1) { //fbi
+  else if (core_id == 1) { //defense core
     int i;
     while (1) {
       for (i = 0; i < TAUNT_SIZE; i++) {
@@ -34,19 +34,19 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     }
   }
   
-  else if(core_id == 0) { //handles opponent's side of mem from the end
-    ptr += HIMEM/4;
-    ptr += OPPONENT_DATA_SIZE/4;
+  else if(core_id == 0) { //offense core: handle opponent's cache (idx=11) from end to front
+    ptr += HIMEM/4; //jump to opponent's rw-mem
+    ptr += OPPONENT_DATA_SIZE/4; //start from the end of mem and write to the start
     ptr -= CACHE_LINE/4;
     Sneak_Attack();
   }
   
-  int mana = WHITE_WALKERS_PER_TEAM;
+  int mana = WHITE_WALKERS_PER_TEAM; //arrow and white walker counters
   int ammo = ARROW_BARRAGES_PER_TEAM;
 
-  //main loop
+  //main loop: write sequentially down the cacheline
   while (core_id != 1) {
-    //reset offset when end of block is reached
+    //reset offset when end of block is reached and move on to next tag of cacheline
     //next blocks of mem for an index are 2 cachelines down
     prefetch(ptr+2*CACHE_LINE/4); //->optimal place to prefetch is here
     ptr[0] = payword; //Unrolling
@@ -112,7 +112,7 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     ptr[60] = payword;
     ptr[61] = payword;
     ptr[62] = payword;
-    if(core_id==0 && mana>0)
+    if(core_id==0 && mana>0) //core 0 sets traps at the end of each cache_line if able
     {
       ptr[63] = walker;
       mana--;
@@ -120,7 +120,7 @@ void __start(int core_id, int num_crashes, unsigned char payload)
     else
       ptr[63] = payword;
       
-    if(core_id%2) //even numbered cores write from the end
+    if(core_id%2) //even numbered cores write from the end to the front
       ptr += 2*CACHE_LINE/4;
     else
       ptr -= 2*CACHE_LINE/4;
