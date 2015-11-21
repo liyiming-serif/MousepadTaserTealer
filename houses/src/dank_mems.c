@@ -1,6 +1,8 @@
 #include "cacheofkings.h"
 
-/*Optimize cores 0 and 1. Stretch: win with buffer overflow.*/
+/* This 'dank_mems' bot utilizes the cache to write to mem, systematically writes and sets traps for opponent,
+ * and checks for sneak_attack cores
+ */
 void __start(int core_id, int num_crashes, unsigned char payload)
 {
   //init pointer
